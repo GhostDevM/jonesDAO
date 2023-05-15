@@ -1,0 +1,464 @@
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+
+ 
+<div class="staff-list main-content">
+    
+    <nav #navbar class="navbar navbar-default  custom">
+        <div class="main-div container-fluid ">
+
+            <app-staff-header-menu></app-staff-header-menu>
+            <br>
+            
+            <div class="table-div">
+                <div class="alert alert-danger" *ngIf="INVALID_TIME_FORMAT !=''">
+                    <span class="close" (click)="_hideInvalidTimeError()">&times;</span>
+                    {{ INVALID_TIME_FORMAT }}
+                </div>
+                <div class="row dayclick">
+                    <div class=" col-md-9 d-flex clicker">
+
+                    <!-- style="background : {{ button_value.status ? button_value.colour : button_value.disabled_colour }}" -->
+    
+                    <button 
+                        *ngFor="let button_value of BUTTONS_LIST; let button_index = index" 
+                        [ngClass]="button_index == 0 ? 'workday' : 'absentday'"
+                        (click)="_changeButton(button_index)"
+                        > 
+                            {{ button_value.name }}
+                            +
+                    </button>
+                <!-- <button class="traday"> Training Day</button> -->
+      
+                    <!-- <button class="workday" disabled> Working Day</button>
+                  <button class="sticday"> Sick Day</button>
+                    <button class="annuday">Annual Day</button> -->
+                    <button class="btn-save"  (click)="_saveButton()">Save</button>
+                        <!-- <i class="fa fa-floppy-o"  aria-hidden="true" (click)="_saveButton()"></i>   -->
+                        <!-- <i class="fa fa-times" aria-hidden="true" class=" {{ !IS_SAVE_BUTTON ? 'cancel_disabled' : 'cancel_not_disabled' }}" (click)="_setPreviousSelectButton()"></i> -->
+                    </div>
+
+                    <div class="col-md-3 date-picker">
+                        <i class="fa fa-caret-left week-icon week-icon-left" aria-hidden="true" (click)="lastweek()"></i>
+                        <ejs-daterangepicker style="width: 175px;"
+                            id='daterangepicker' 
+                            format='dd/MM/yyyy'
+                            placeholder='Select a range'
+                            [(ngModel)]="DATEPICKERMODEL"
+                            (change)="_selectDateRangePicker($event)"
+                       
+                            >
+                            <!-- [startDate]='WEEKLY_START' 
+                            [endDate]='WEEKLY_END' 
+                            [(ngModel)]="DATEPICKERMODEL" -->
+                        </ejs-daterangepicker>
+                        <i class="fa fa-caret-right week-icon week-icon-right" aria-hidden="true" (click)="nextweek()"></i>
+                    </div>
+                </div>
+                <div class="table-div-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Staff</th>
+                                <th *ngFor="let day of this.WEEK_DAYS_LIST" class="text-center staff-day">{{ day.date_value }}</th>
+                                <th class="text-center staff-day">Total Hours</th>
+                            </tr>
+                        </thead>
+        
+                        <tbody>
+                            <tr *ngFor="let staff of LIST; let staff_index = index">
+                                <td class="image-name">
+                                    <img class="image-class" [src]="staff.employeeImg">
+                                    <div >
+                                        <div class="rota-staff-name"> {{ staff.firstName }} {{ staff.lastName}} </div>
+                                         
+                                    </div>
+                                </td>
+                                <td *ngFor="let work_details of staff.list; let date_index = index;" class="staff-day">                             
+                                        <div *ngFor="let schedule of work_details.work_detail_list; let schedule_index = index">
+                                        
+                                            <div *ngIf="!schedule.is_editable">
+        
+                                                <span   class="badge" 
+                                                    [class.badge]="schedule.is_closed" 
+                                                    (dblclick)="_openModel(staff.employee_id  , schedule ,schedule.day_name_value)" 
+                                                    
+                                                    *ngIf="schedule.is_closed"
+                                                    >
+                                                    <span class="rota-plus" (click)="_openEditable(staff_index , date_index , schedule_index); ">+</span>
+                                                    <!-- <span class="fa fa-edit edit-timing-icon" style="cursor: pointer;" (dblclick)="_openModel(staff.employee_id  , schedule ,schedule.day_name_value , work_details.work_detail_list)"
+                                                        ></span> -->
+                                                </span>
+                                                
+                                                <span class="badge " [class.badge-active]="!schedule.is_closed"  *ngIf="!schedule.is_closed && schedule.description == ''"
+                                                        > 
+                                                    <span (click)="_openEditable(staff_index , date_index , schedule_index); ">
+                                                        {{ schedule.time }}
+                                                    </span> 
+                                                    <span class="fa fa-edit edit-timing-icon" style="cursor: pointer;" (dblclick)="_openModel(staff.employee_id  , schedule ,schedule.day_name_value , work_details.work_detail_list)"
+                                                        ></span>
+                                                    
+                                                    <span class="fa fa-trash edit-timing-icon" style="cursor: pointer; padding: 10px;" (dblclick)="_deleteShift( schedule.work_day_id )"
+                                                        ></span>
+                                                </span>
+        
+                                                <span 
+                                                    class="badge leave-day-active" 
+                                                    [class.badge-active]="!schedule.is_closed"  
+                                                    *ngIf="!schedule.is_closed && schedule.description != '' "
+                                                    data-placement="top" 
+                                                    style="background: {{schedule.background_color}} !important;"
+                                                    [title]=" work_details.is_full_day_off ? 'Full day' : schedule.miscEventStartTime +' - '+ schedule.miscEventEndTime "    
+                                                    > 
+    
+                                                <span (click)="_openEditable(staff_index , date_index , schedule_index); "> {{ schedule.description }}</span> 
+    
+                                                <span class="fa fa-trash edit-timing-icon" style="cursor: pointer;" (dblclick)="_deleteShift( schedule.work_day_id )"
+                                                        ></span>
+                                                </span>
+                                            </div>
+        
+                                            
+                                            
+                                            <div class="editable" 
+                                                *ngIf="schedule.is_editable" 
+                                                >
+                                                <!-- <span (click)="_openEditable(staff_index , date_index , schedule_index);input_time.focus()">take</span> -->
+                                                <input 
+                                                    [value]="schedule.time === undefined ? '00:00 - 00:00' : schedule.time" 
+                                                    class="form-control editable-input"
+                                                    style="display: {{ BUTTONS_LIST[CURRENT_ACTIVE_BUTTON_INDEX]['value'] == '' ? '' : 'none' }}" 
+                                                    id="input_time"
+                                                    #input_time
+                                                    (blur)="_rotaInfoUpdate($event.target.value , staff_index , date_index , schedule , staff.employee_id , schedule_index)"
+                                                    (keyup.enter)="_rotaInfoUpdate($event.target.value , staff_index , date_index , schedule , staff.employee_id , schedule_index)"
+                                                    />
+    
+                                                
+                                                <span 
+                                                    class="badge leave-day-active" 
+                                                    [class.badge-active]="!schedule.is_closed"  
+                                                    style="display: {{ BUTTONS_LIST[CURRENT_ACTIVE_BUTTON_INDEX]['value'] != '' ? '' : 'none' }}; background: {{ BUTTONS_LIST[CURRENT_ACTIVE_BUTTON_INDEX]['colour'] }} !important"
+                                                    > 
+    
+                                                    <span> 
+                                                        {{ BUTTONS_LIST[CURRENT_ACTIVE_BUTTON_INDEX]['value'] }}
+                                                    </span> 
+    
+                                                    <!-- <span class="fa fa-edit edit-timing-icon" style="cursor: pointer;" (dblclick)="_openModel(staff.employee_id  , schedule ,schedule.day_name_value , work_details.work_detail_list)"
+                                                        ></span> -->
+                                                </span>
+    
+                                            </div>
+                                        </div>
+                                </td>
+    
+    
+    
+    
+    
+                                <td class="staff-day weekly_hours text-center">
+                                  
+                                    <div> {{ staff.total_no_of_hours }} Hours </div>
+                                    <div> {{ staff.total_no_of_minutes }} Minutes </div>
+                                    
+                                </td>
+                                
+                            </tr>
+        
+                            
+                        </tbody>
+        
+                    </table>
+                </div>
+            </div>
+            
+    
+        </div>
+
+        
+    </nav>
+    <div class="modal" tabindex="-1"  role="dialog" [ngStyle]="{'display': MODEL_OPEN ? 'block' : 'none' }">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="margin: 15px 5px;">
+                    <i class="fa fa-close" style="cursor: pointer; float: right; font-size: 20px;" (click)="_closeModel()"></i>
+                    <div style="display: flex;">
+                        <h6 class="modal-title">Shift for</h6>
+                        <h5 style="margin-bottom: 0px; margin-top: 0px; margin-left: 130px;"> {{ SELECTED_DATE }}</h5>
+                    </div>
+                    
+                </div>
+                <div class="modal-body" style="overflow-y: scroll; height: 450px; overflow-x: hidden;">
+                    
+                    <div class="row staff-member">
+
+                        <div class="col-md-1"></div>
+                        <div class="staff-member-title col-md-10 ">
+                            <label>Staff Member</label>
+                            <input  type="text" 
+                                    class="form-control staff-member-input-custom" 
+                                    [(ngModel)]="STAFF_MEMBER" 
+                                    placeholder="enter the staff name" 
+                                    disabled style="height: 25px; width: 60%; margin-left: 10px;">
+                            
+                        </div>
+                        <div class="col-md-1"></div>
+                        
+                    </div>
+                    <br>
+                    
+                    <div *ngFor="let rota of NEW_ROTA_ARRAY;let i = index">
+                        <div *ngIf="!rota.is_deleted" style="margin-left: 10px;">
+                            
+                            <div class="row" style="margin-left: 5px; padding-left: 5px;">
+                                <div class="col-md-10" style="margin-top: 5px; padding-left: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
+                                    <label>Working Hours {{ rota.index_number }}</label>
+                                    <label><i class="fa fa-trash text-danger delete-shift" (click)="_deleteRotaIndex(i)"></i></label>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                            <br>
+
+                            <div class="row" style="margin-top: -15px; margin-bottom: -15px;">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10" style="display: flex; justify-content: space-between;padding: 0px; margin-left: -5px;">    
+                                    <div>   
+                                        <label>Working Hours start</label>
+                                        <div style="display: flex;">
+                                            <select  class="working-info form-control " [(ngModel)]="WORKING_START_TIME" (change)="_addFormValue(i , 'shift_start_hour' , $event.target.value)">
+                                                <option *ngFor="let hour of HOURS_LIST" 
+                                                        [value]="hour" 
+                                                        [selected]="hour == rota.shift_start_hour"
+                                                        > {{ hour }} </option>
+                                            </select>
+                                            <select  class="working-info form-control " [(ngModel)]="WORKING_START_MINUTE" [value]='08' (change)="_addFormValue(i , 'shift_start_minut' , $event.target.value)">
+                                                <option *ngFor="let minut of MINUTES_LIST" 
+                                                        [value]="minut"
+                                                        [selected]="minut == rota.shift_start_minut"
+                                                        > {{ minut }} </option>
+                                            </select>
+                                        </div>
+                                    </div> 
+                                    <div>
+                                        <label>Working Hours end</label>
+                                        <div style="display: flex;">
+                                            <select [(ngModel)]="WORKING_END_TIME" class="working-info form-control" (change)="_addFormValue(i , 'shift_end_hour' , $event.target.value)">
+                                                <option *ngFor="let hour of HOURS_LIST" 
+                                                        [value]="hour" 
+                                                        [selected]="hour == rota.shift_end_hour"
+                                                        > {{ hour }} </option>
+                                            </select>
+                                            <select [(ngModel)]="WORKING_END_MINUTE" class="working-info form-control" (change)="_addFormValue(i , 'shift_end_minut' , $event.target.value)">
+                                                <option *ngFor="let minut of MINUTES_LIST" 
+                                                        [value]="minut" 
+                                                        [selected]="minut == rota.shift_end_minut"
+                                                        > {{ minut }} </option>
+                                            </select>
+                                        </div>    
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+
+                            <br>
+
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10 sick-training-day">
+                                    
+                                    <label>Sick day/Training day</label>
+                                   
+                                  
+                                    <select style="width: 40%; margin-left: 25px;" class="working-info form-control" (change)="_addFormValue(i , 'is_sick_or_taining_day' , $event.target.value)">
+                                        <option *ngFor="let leave of BUTTONS_LIST" 
+                                                [value]="leave.value" 
+                                                
+                                                [selected]="leave.value == rota.is_sick_or_taining_day"
+                                                > {{ leave.name }} </option>
+                                    </select>
+                                  
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+
+
+                            <div class="row still-working">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10" style="display: flex;
+                                    justify-content: space-between;
+                                    margin-left: -5px;
+                                    padding: 0px;
+                                    margin-top: 10px;">
+                                    <label>Is staff member  working untill close ?</label>
+    
+                                    <input type="checkbox" style="margin-top: -10px;"  (change)="_isClosingChange(i , $event.target.checked)">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                                
+                            <br>
+
+
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10" style="padding: 0px;
+                                    margin-left: -5px;">
+                                    <div style="margin-top: 10px;">
+                                        <label style="margin-bottom: 0px;">Break start</label>
+                                        <div style="display: flex;">
+                                            <select [(ngModel)]="BREAK_START_TIME" class="working-info form-control"  (change)="_addFormValue(i , 'break_start_hour' , $event.target.value)">
+                                                <option *ngFor="let hour of HOURS_LIST" 
+                                                        [value]="hour"
+                                                        [selected]="hour == rota.break_start_hour"
+                                                        > {{ hour }} </option>
+                                            </select>
+                                            <select  class="working-info form-control" (change)="_addFormValue(i , 'break_start_minut' , $event.target.value)">
+                                                <option *ngFor="let minut of MINUTES_LIST" 
+                                                        [value]="minut"
+                                                        [selected]="minut == rota.break_start_minut"
+                                                        > {{ minut }} </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="margin-top: 5px; margin-bottom: 0px;">Break end</label>
+                                        <div style="display: flex;">
+                                            <select [(ngModel)]="BREAK_END_TIME" class="working-info form-control" (change)="_addFormValue(i , 'break_end_hour' , $event.target.value)">
+                                                <option *ngFor="let hour of HOURS_LIST" 
+                                                        [value]="hour"
+                                                        [selected]="hour == rota.break_end_hour"
+                                                        > {{ hour }} </option>
+                                            </select>
+                                            <select  class="working-info form-control" (change)="_addFormValue(i , 'break_end_minut' , $event.target.value)">
+                                                <option *ngFor="let minut of MINUTES_LIST" 
+                                                        [value]="minut"
+                                                        [selected]="minut == rota.break_end_minut"
+                                                        > {{ minut }} </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+
+                        <hr class="hr-custom">
+                    </div>
+                    <hr class="hr-custom">
+                    <br>
+
+                    <div class="row repeat-working">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-6 repeat-working-hours" style="padding-right: 0px;
+                            padding-left: 5px;
+                            gap: 5px;">
+                            
+                            <input  type="checkbox" 
+                                    [(ngModel)]="REPEAT_CHECK" 
+                                    (change)="_changeRepeatCheck()"
+                                    id="repeat-check"
+                                    >
+                            <label style="margin-top: 10px; font-size: 12px;" for="repeat-check">Repeat this Working Hours</label>
+                            
+                            
+                        </div>
+
+                        <div class="col-md-4" style="margin-top: 5px;">
+                            
+                            <input  type="checkbox" 
+                                    [(ngModel)]="FULL_DAY_OFF" 
+                                    (change)="_changeFullDayOff()"
+                                    id="full-day-off"
+                                    >
+                            <label style="margin-left: 5px; font-size: 12px;" for="full-day-off">Full day off</label>
+                            
+                            
+                        </div>
+
+                        <div class="col-md-1"></div>
+                        
+                    </div>
+                    
+                    <br>
+
+                    <div class="repeatable-working row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-8" style="padding-left: 5px;">
+                            
+                            <label>Repeatable weeks (Max 12 weeks)</label>
+                        </div>   
+                        <div class="col-md-2">
+                            <select [(ngModel)]="MAX_REPEATABLE_WEEK" class="working-info form-control">
+                                <option *ngFor="let value of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="value">
+                                    {{ value }}
+                                </option>
+                            </select>
+                        </div>                              
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-1">
+                        </div>
+                        <div class="col-md-11" style="padding-left: 5px;"> 
+                            <button class="model-button btn btn-default btn-sm add-shift "  (click)="_addRota()">Add shift +</button>
+                        </div>
+
+                    </div>
+            
+                </div>
+                <div class="shift-for-footer modal-footer">
+                    <button type="button" class="btn btn-dark model-button" (click)="_updateRota()">
+                        Save
+                    </button>
+                    <button type="button cancel" class="btn btn-danger model-button" (click)="_closeModel()">
+                        Cancel
+                    </button>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- Rota updated success Pop-up start-->
+
+<div class="modal message-model" tabindex="-1"  role="dialog" [ngStyle]="{'display': MESSAGE_MODEL_OPEN ? 'block' : 'none' }">
+    <div class="modal-dialog modal-dialog-message modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+  
+            <div class="right-icon">
+              <i class="fa fa-check rights" aria-hidden="true"></i>
+            </div>
+            <div class="modal-header mod-header"></div>
+            <div class="modal-body mod-conetnt">
+              
+              <span> {{ MESSAGE_MODEL_TEXT }} </span>
+              <div class="confirm-div">
+                <button class="btn btn-success confirm" (click)="_closeMessageModel()">Confirm</button>
+              </div>
+              
+            </div>
+            <div class="modal-footer mod-footer">
+                
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+<!-- Rota updated success Pop-up end-->
+

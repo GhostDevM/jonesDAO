@@ -1,0 +1,125 @@
+.main-heading {
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.heading-bar {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: white;
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 15px;
+    margin-left: -21px;
+}
+
+.staff-list-add-title {
+    padding-top: 10px;
+    padding-left: 35px;
+    font-size: 20px;
+}
+
+.form-control {
+    height: 30px;
+    padding: 3px 12px;
+}
+.add-message {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.confirm-div {
+    display: flex;
+    justify-content: center;
+}
+
+.confirm {
+    color: white;
+    background-color: #361b5e;
+}
+.confirm:hover {
+    color: #23ccef;
+    background-color:white;
+}
+
+.alert {
+    /* position: relative; */
+    margin-top: 4px;
+    padding: 0.3rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem !important;
+}
+
+.alert-danger {
+    color: #721c24;
+    position: unset !important;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    width: 95%; 
+}
+
+.button-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.submit-button {
+    background-color: #341c5b;
+    color: white;
+    border-radius: 11px;
+    margin: 5px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+}
+.submit-button:hover {
+    color:#23ccef;
+    background-color: white;
+    border:1px solid#23ccef;
+    cursor: pointer;
+}
+
+.add-staff-button{
+    
+    float: right !important;
+    margin-bottom: -5px !important;
+    border-radius: 20px;
+    background-color: #361b5e;
+    color: white;
+    opacity: 1;
+    margin-top: -8px !important;
+}
+
+.staff-heading {
+    margin-right: -58px;
+}
+
+.heading-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid gray;
+}
+.heading-list:hover {
+    cursor: pointer;
+}
+
+.active {
+    /* border-bottom: 2px solid; */
+    color: #262872;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 763px) {
+    .heading {
+        margin-left: 18px !important;
+        margin-top: 12px !important;
+    }
+  }
+

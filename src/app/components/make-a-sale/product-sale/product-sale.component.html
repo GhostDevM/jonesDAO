@@ -1,0 +1,610 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+    <p style="color: white"> {{ SPINNER_TEXT }} </p>
+</ngx-spinner>
+
+<div class="main-content custom-main">
+    <nav #navbar class="navbar navbar-default  custom">
+        <div class="container-fluid">
+            <div class="row card custom-header">
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 main-heading">
+                    <div class="heading" *ngFor="let tab of TAB_LIST" [class.active]="tab.is_active" (click)="_changeTab(tab.id)"> {{ tab.value }} </div>
+                </div>
+                <div *ngIf="CURRENT_TAB == 'Services'" class="col-md-1"></div>
+                <div *ngIf="CURRENT_TAB == 'Services'" class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <input type="text" [(ngModel)]="SERVICE_SEARCH_TEXT" (keyup)="_searchServiceFilter()" placeholder="Search service name or description" class=" form-control searchbox service-search" />
+                            
+                        </div>
+                        <!-- <div class="col-md-3">
+
+                            <button class="service-filter-btn btn button_main" (click)="_searchServiceFilter()">Filter</button>
+                            
+                        </div>
+                        <div class="col-md-3">
+                            <button class="service-filter-btn btn button_main" (click)="_clearServiceFilter()">Clear Filter</button>
+                        </div> -->
+                    </div>
+                </div>
+                
+                <!-- <div *ngIf="CURRENT_TAB == 'Products'" class="custom-filter col-xs-2 col-sm-2 col-md-2 col-lg-2 " style="display: flex">
+                    <button class="btn-filter btn button_main " (click)="_searchFilter()">Filter</button>
+                    <button class="btn-reset btn button_main" (click)="_clearFilter()">Reset</button>
+                </div> -->
+            </div>
+            
+            <div *ngIf="CURRENT_TAB == 'Products'" class="row  main_one card custom_category" >
+                <div class="col-md-9">
+                    <button class="btn button_down" 
+                            *ngFor="let brand of BRAND_LIST; let i = index;"
+                            [class.active] = "brand.is_active"
+                            (click)="_selectBrand(i)">
+                        {{ brand.name }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="row ">
+                <!-- Products Section Start -->
+                <div class="col-md-8 col-sm-8 col-xl-8 col-lg-8 main_content main_row" *ngIf="CURRENT_TAB == 'Products'">
+                    <div class="row picture_main">
+                        <div class="col-md-12">
+                            <div class="row" style="padding: 15px 7px;">
+                                <div class="row sort-row">
+                                    <div *ngIf="CURRENT_TAB == 'Products'" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 custom-pub">
+                                        <p class="custom-p">Sort</p>
+                                    </div>
+                                    <div *ngIf="CURRENT_TAB == 'Products'" class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                        
+                                        <select class="form-control m-5 custom-select" [(ngModel)]="STOCK_FILETR" (change)="_searchFilter()">
+                                            <option value="0">All</option>
+                                            <option value="1">In stock</option>
+                                            <option value="2">Out of stock</option>
+                                            <option value="3">Limited</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="CURRENT_TAB == 'Products'" class="custom-product-select col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <input type="text" [(ngModel)]="SEARCH_TEXT" placeholder="Search product name or description" class="form-control searchbox" 
+                                            (keyup)="_searchFilter()"/>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 " *ngFor="let product of PRODUCT_LIST ">
+                                    
+                                    <div class="card row custom-products" (click)="_addToCart(product.id)">
+                                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                            <img [src]="product.image" class="card-img-top" alt="...">
+                                        </div>
+                                        <div class="card-body col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-7">
+                                            <h5 class="card-title">{{product.name}}</h5>
+                                            <p class="card-text">{{product.description}}</p>
+                                            <p class="paragraph">{{product.quantity}}</p>
+                                            <span class="span1">
+                                                <h5 class="math">{{product.price | currency: 'EUR'}}</h5>
+                                                
+                                            </span>
+                                            <!-- <button class="btn-add-to-cart" (click)="_addToCart(product.id)">Add To Cart</button> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="CURRENT_TAB == 'Services'">
+                    <div class="row main_row ">
+                        <div class="col-md-12">
+                            <button class="btn-services-category btn btn-info" 
+                                    *ngFor="let category of SERVICE_CATEGORY_LIST; let i = index;" 
+                                    (click)="_selectCategory(i)"
+                                    [style.background-color]="_getColorByCategory(category.colourId)"
+                                    [style.border-color]="_getColorByCategory(category.colourId)">
+                                {{ category.categoryName }}
+                                <i class="fa fa-check" *ngIf="category.is_active"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Products Section End -->
+
+                <!-- Service Section Start -->
+
+                <div class="col-md-8 col-sm-8 col-xl-8 col-lg-8 main_content main_row" *ngIf="CURRENT_TAB == 'Services'">
+                    <div class="row picture_main">
+                        <div class="col-md-12">
+                            <div class="row" style="padding-top: 15px;">
+                                <div class="col-md-4 col-sm-4 col-xl-4 col-lg-4" *ngFor="let service of SERVICE_LIST ">
+                                    <div class="custom-services card" (click)="_addServiceToCart(service.id)" style="padding: 10px; height: 120px;">
+                                        <!-- <img [src]="service.image" class="card-img-top" alt="..."> -->
+                                        <div class="card-body" >
+                                            <h5 class="card-title">{{service.serviceName}}</h5>
+                                            <p class="card-text">{{service.serviceDescription}}</p>
+                                            <p class="card-text">Time: {{service.serviceDuration}} (minutes)</p>
+                                            <span class="span1">
+                                                <h5 class="math">{{service.servicePrice | currency:'EUR'}}</h5>
+                                                
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Section End -->
+
+                <!-- Voucher Section Start -->
+
+                <div class="col-md-8 main_content main_row" *ngIf="CURRENT_TAB == 'Vouchers'">
+                    <div class="row voucher-row">
+
+                        <form [formGroup]="ADD_VOUCHER_FORM" (ngSubmit)="_addVoucher(ADD_VOUCHER_FORM)">
+                        <b>Client Details who will use voucher</b>
+                        <div class="row client-details">
+
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <input type="text" formControlName="firstName" (input)="_updateFormValue()" (blur)="_updateFormValue()"  placeholder="Client First Name..." class="form-control voucher-input" />
+                                    
+                                    <div *ngFor="let error of errorMesages.firstName">
+                                        <div *ngIf="firstName.hasError(error.type) && (firstName.dirty || firstName.touched)">
+                                          <div class="alert alert-danger">
+                                            {{ error.message}}.
+              
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-6 ">
+                                    <input type="text" formControlName="sirName" (input)="_updateFormValue()" (blur)="_updateFormValue()"  placeholder="Client Surname..." class="form-control voucher-input" />
+                                    
+                                    <div *ngFor="let error of errorMesages.sirName">
+                                        <div *ngIf="sirName.hasError(error.type) && (sirName.dirty || sirName.touched)">
+                                          <div class="alert alert-danger">
+                                            {{ error.message}}.
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <input type="text" formControlName="phone" (input)="_updateFormValue()" (blur)="_updateFormValue()" (keypress)="numberOnlyValidation($event)" placeholder="Phone Number..." class="form-control voucher-input" />
+                                    
+                                    <div *ngFor="let error of errorMesages.phone">
+                                        <div *ngIf="phone.hasError(error.type) && (phone.dirty || phone.touched)">
+                                          <div class="alert alert-danger">
+                                            {{ error.message}}.
+              
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-md-6 ">
+                                    <input type="text" formControlName="email" (input)="_updateFormValue()" (blur)="_updateFormValue()" placeholder="Email..." class="form-control voucher-input" />
+                                    
+                                    <div *ngFor="let error of errorMesages.email">
+                                        <div *ngIf="email.hasError(error.type) && (email.dirty || email.touched)">
+                                          <div class="alert alert-danger">
+                                            {{ error.message}}.
+              
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 ">
+                                <input type="checkbox" formControlName="no_details_provided" (change)="_updateFormValue(); _noInfoChange()" />
+                                No details provided
+                            </div>
+                        </div>
+                        <br>
+
+                        <b>Voucher Details</b>
+                        <div class="row client-details">
+
+                            <!-- <div class="col-md-6 ">
+                                <input type="text" disabled formControlName="voucher_serial_number" (input)="_updateFormValue()" (blur)="_updateFormValue()" placeholder="Voucher Serial Number..." class="form-control voucher-input" />
+                                
+                                <div *ngFor="let error of errorMesages.voucher_serial_number">
+                                    <div *ngIf="voucher_serial_number.hasError(error.type) && (voucher_serial_number.dirty || voucher_serial_number.touched)">
+                                      <div class="alert alert-danger">
+                                        {{ error.message}}.
+          
+                                      </div>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-6 ">
+                                <textarea formControlName="description" (input)="_updateFormValue()" (blur)="_updateFormValue()" placeholder="Description..." class="form-control voucher-input"></textarea>
+                                
+                                <div *ngFor="let error of errorMesages.description">
+                                    <div *ngIf="description.hasError(error.type) && (description.dirty || description.touched)">
+                                      <div class="alert alert-danger">
+                                        {{ error.message}}.
+          
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <input type="text" formControlName="voucher_amount" (input)="_updateFormValue()" (blur)="_updateFormValue()" (keypress)="numberOnlyValidation($event)" placeholder="Voucher Amount..." class="form-control voucher-input" />
+                                
+                                <div *ngFor="let error of errorMesages.voucher_amount">
+                                    <div *ngIf="voucher_amount.hasError(error.type) && (voucher_amount.dirty || voucher_amount.touched)">
+                                      <div class="alert alert-danger">
+                                        {{ error.message}}.
+          
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
+                        <b>Email Voucher</b>
+                        <div class="row client-details">
+
+                            <div class="col-md-8 ">
+                                <input type="text" formControlName="email_voucher" (input)="_updateFormValue()" (blur)="_updateFormValue()" placeholder="Address email will be sent to..." class="form-control voucher-input" />
+                                
+                                <div *ngFor="let error of errorMesages.email_voucher">
+                                    <div *ngIf="email_voucher.hasError(error.type) && (email_voucher.dirty || email_voucher.touched)">
+                                      <div class="alert alert-danger">
+                                        {{ error.message}}.
+          
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-md-12 ">
+                                <input type="checkbox" formControlName="client_same_email" (change)="_updateFormValue(); _sameClientEmail()"/>
+                                Same email as client details above  
+                            </div>
+                        </div>
+
+                        <div class="row text-center">
+                            <button type="submit" [disabled]="!ADD_VOUCHER_FORM.valid" class="btn btn-success add-coucher"> Add to cart</button>
+                        </div>
+
+                        </form>
+                        
+                    </div>
+                    
+                </div>
+
+                <!-- Voucher Section End -->
+
+                <!-- <div class="col-md-1 "></div> -->
+
+                <!-- <div class="col-md-4 " *ngIf="CURRENT_TAB == 'Services'">
+                    <div class="main_row2">
+                    <div class="row mt-3 ">
+                        <div class="col-md-12">
+                            <h5 class="order_details">Current Order</h5>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12 Order_main" *ngFor="let cart of CART_LIST ; let i = index">
+                            <img [src]="cart.image" class="image_short" alt="....">
+                            <div>
+                                <div class="clickvalmain w-100">
+                                    <div class="clickval">
+                                        <button class="raw" (click)="_cartProductItemChange(i , 'decrement')">-</button>
+                                        {{cart?.no_of_item}} 
+                                       <button 
+                                        class="raw" 
+                                        (click)="_cartProductItemChange(i , 'increment')" 
+                                        [disabled]="cart.itemType == 'product' ? (cart.no_of_item >= cart.quantity ? true : false) : false"
+                                        [class.product_btn_dissabled]="cart.itemType == 'product' ? (cart.no_of_item >= cart.quantity ? true : false) : false"
+
+                                        >+</button> 
+                                    </div>
+                                    <div class="priceval">
+                                        <p class="raw12">{{ ( cart.price * cart?.no_of_item | currency:'EUR')}}</p>
+                                    </div>
+                                </div>
+                                <span class="span12">       
+                                    <p class="raw26" *ngIf="cart.itemType == 'product'"> {{ cart.name}} </p>
+                                    <p class="raw26" *ngIf="cart.itemType == 'service'"> {{ cart.serviceName}} </p>
+                                    <p class="raw26" *ngIf="cart.itemType == 'voucher'"> voucher </p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 div_payment">
+                            <div class="pay text-center">
+                                <p class="para mb-1">Payment Method</p>
+                                <div class="pay2 d-flex ">
+                                    <div class="payment" [class.payment-method-active]="IS_CASH_PAYMENT_ACTIVE" (click)="this.IS_CASH_PAYMENT_ACTIVE = true;">
+                                        <i class="fa fa-money" aria-hidden="true" style="cursor: pointer;"></i>
+                                        <p class="param">Cash</p>
+                                       
+                                    </div>
+                                    <div class="payment" [class.payment-method-active]="!IS_CASH_PAYMENT_ACTIVE" (click)="this.IS_CASH_PAYMENT_ACTIVE = false;">
+                                        <i class="fa fa-credit-card" aria-hidden="true" style="cursor: pointer;"></i>
+                                        <p class="param d-flex">Debit Card</p>
+                                    </div>
+                                </div>
+                                <p class="para ">PROMO CODE</p>
+                                <input type="search" placeholder="Enter Promo Code here"
+                                    class="form-control  code" />
+                                <button class="btn btn-info coupon-button">Apply</button>
+                            </div>
+                            <span class="span3" >
+                                <p class="item1">Sub Total</p>
+                                <p class="item2 rd ">{{ SUB_TOTAL | currency: 'EUR'}}</p>
+                            </span>
+                            <span class="span3" >
+                                <p class="item1">Discount applied</p>
+                                <p class="item2 rd ">{{ DISCOUNT_COUPON | currency:'EUR'}}</p>
+                            </span> <span class="span3" >
+                                <p class="item1">Sales tax</p>
+                                <p class="item2 rd ">{{ SALES_TAX | currency:'EUR'}}</p>
+                            </span>
+
+                            <span class="span3">
+                                <p class="item1 bill mb-0 mt-1">Total</p>
+                                <p class="item2 bills mb-0 mt-1">{{ TOTAL_PAYMENT | currency:'EUR'}}</p>
+                            </span>
+                            <div class="d-grid mt-3 text-center">
+                                <button type="button"  class="btn btn_last" (click)="_confirmPayment()">Confirm Payment</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div> -->
+
+
+                <!-- *ngIf="CURRENT_TAB == 'Products'" -->
+                <div class="col-md-4 col-sm-4 col-xl-4 col-lg-4" >
+                    <div class="main_row2">
+                        <div class="row mt-3 ">
+                            <div class="col-md-12">
+                                <p class="order_details">· Select your method</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 div_payment">
+                                <div class="pay text-center">
+                                    <!-- <p class="para mb-1">Payment Method</p> -->
+                                    <div class="pay2 d-flex ">
+                                        <div class="payment payment-cash" [class.payment-method-active]="IS_CASH_PAYMENT_ACTIVE" (click)="_isPaymentActive('cash')">
+                                            <i class="fa fa-money" aria-hidden="true" style="cursor: pointer;"></i>
+                                            <p class="param">Cash</p>
+                                            <div *ngIf="IS_CASH_PAYMENT_ACTIVE" class="check-icon-custom-div">
+                                                <i class="fa fa-check check-icon-custom"></i>
+                                            </div>
+                                        </div>
+                                        <div class="payment payment-debit" [class.payment-method-active]="IS_DEBIT_PAYMENT_ACTIVE" (click)="_isPaymentActive('debit')">
+                                            <i class="fa fa-credit-card" aria-hidden="true" style="cursor: pointer;"></i>
+                                            <p class="param d-flex">Debit Card</p>
+                                            <div *ngIf="IS_DEBIT_PAYMENT_ACTIVE" class="check-icon-custom-div">
+                                                <i class="fa fa-check check-icon-custom"></i>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="payment payment-credit" [class.payment-method-active]="IS_CREDIT_PAYMENT_ACTIVE" (click)="_isPaymentActive('credit')">
+                                            <i class="fa fa-credit-card" aria-hidden="true" style="cursor: pointer;"></i>
+                                            <p class="param d-flex">Credit Card</p>
+                                            <div *ngIf="IS_CREDIT_PAYMENT_ACTIVE" class="check-icon-custom-div">
+                                                <i class="fa fa-check check-icon-custom"></i>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    
+                                </div>
+                                <!-- <div class="custom-product-select-finance" *ngIf="CURRENT_TAB == 'Products'">
+                                    <input style="border-radius: 8px;" type="text"  placeholder="Search product name or description" class="form-control searchbox-finance" />
+                                </div> -->
+                                <!-- [(ngModel)]="SEARCH_TEXT" -->
+                                <div class="payment-under-body">
+                                    <div class="row payment-promocode">
+                                        
+                                        <div>
+                                            <input #searchClient type="search" placeholder="CLIENT NAME" [(ngModel)]="searchText" (keyup) = "_show()" (click)="insertInput()" id="search-text" aria-describedby="search-text" class="client-name-input form-control" />
+                                            <ul *ngIf="flag" class="list-group list-group-flush">
+                                                <li class="list-group-item" *ngFor="let c of client_name | appFilter: searchText" (click)="insertList(c)" appHighlight
+                                                  [searchedWord]="searchText" [content]="c" [classToApply]="'font-weight-bold'">
+                                                  {{c}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row payment-promocode">
+                                        <p>· PROMO CODE</p>
+                                        <div style="position: relative;">
+                                            <input id="inputPromoCode" type="search" placeholder="Enter Promo Code here" onfocus="this.placeholder=''" onblur="this.placeholder='Enter Promo Code here'" [(ngModel)]="PAYMENT_PROMO_INPUT" class="payment-promo-input form-control" />
+                                            <div *ngIf="PROMOCODEACTIVE" class="promo-code-box">
+                                                <i class="fa fa-pencil promo-code-custom-icon" aria-hidden="true"></i>{{PAYMENT_PROMO_INPUT_TEXT}}<i class="fa fa-times promo-code-custom-close-icon" aria-hidden="true" (click)="closePromoCodeBox()"></i>
+                                            </div>
+                                            <button class="btn btn-info coupon-button payment-promo-btn" (click)="_applyNow()">Apply Now</button>
+                                        </div>
+                                    </div>
+                                    <div class="payment-current-order">
+                                        <p style="font-size: 12px; margin-bottom: 0;">· CURRENT ORDER</p>
+                                    </div>
+                                    
+                                    <div class="current-order-list row ">
+                                        <div class="col-md-12 col-sm-12 col-xl-12 col-lg-12 Order_main" *ngFor="let cart of CART_LIST ; let i = index">
+                                            <div class="row">
+                                                <div class="col-md-4 col-sm-4 col-xl-4 col-lg-4">
+                                                    <div class="image_short_div" style="position: relative;">
+                                                        <img [src]="cart.image" class="image_short current-order-image" alt="....">
+                                                        <div class="products-count">
+                                                            {{cart?.no_of_item}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-4 col-xl-4 col-lg-4">
+                                                    <button 
+                                                        class="raw btn-plus" 
+                                                        (click)="_cartProductItemChange(i , 'increment')" 
+                                                        [disabled]="cart.itemType == 'product' ? (cart.no_of_item >= cart.quantity ? true : false) : false"
+                                                        [class.product_btn_dissabled]="cart.itemType == 'product' ? (cart.no_of_item >= cart.quantity ? true : false) : false">
+                                                        +
+                                                    </button>
+                                                    <button 
+                                                        class="raw btn-minus" (click)="_cartProductItemChange(i , 'decrement')">
+                                                        -
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-4 col-sm-4 col-xl-4 col-lg-4">
+                                                    <div class="priceval product-price">
+                                                        <p class="raw12">{{ ( cart.price * cart?.no_of_item | currency:'EUR')}}</p>
+                                                    </div>
+                                                    <span class="product-name span12 ">       
+                                                        <p class="raw26" *ngIf="cart.itemType == 'product'"> {{ cart.name}} </p>
+                                                        <p class="raw26" *ngIf="cart.itemType == 'service'"> {{ cart.serviceName}} </p>
+                                                        <p class="raw26" *ngIf="cart.itemType == 'voucher'"> voucher </p>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- <div>
+                                                <div class="clickvalmain w-100">
+                                                    <div class="clickval">
+                                                        
+                                                         
+                                                     
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="total-price-table">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p class="item1">Sub Total</p>                  
+                                                    <p class="item2 rd ">{{ SUB_TOTAL | currency: 'EUR'}}</p>
+                                                </td>
+                                                <td>
+                                                    
+                                                    <p class="item1">Discount applied</p>
+                                                    <p class="item2">{{ DISCOUNT_COUPON | currency:'EUR'}}</p>
+                                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table>
+                                            <tr>
+                                                <!-- <td>
+                                                  
+                                                    <p class="item1">Estimated delivery</p>
+                                                    <p class="item2">{{ SALES_TAX | currency:'EUR'}}</p>
+                                             
+                                                </td> -->
+                                                <td>
+                                                    
+                                                    <p class="item1">Total</p>
+                                                    <p class="item2">{{ TOTAL_PAYMENT | currency:'EUR'}}</p>
+                                                  
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>                
+                                    
+                                    <div class="d-grid mt-3 text-center confirm-payment">
+                                        <button type="button"  class="btn btn_last" (click)="_confirmPayment()">Confirm Payment</button>
+                                        <div class="confirm-arrow-div">
+                                            <i class="fa fa-arrow-circle-right confirm-arrow-icon" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </nav>
+
+</div>
+
+
+
+<div class="modal message-model" tabindex="-1"  role="dialog" [ngStyle]="{'display': MODEL_OPEN ? 'block' : 'none' }">
+   
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+  
+            <div class="right-icon">
+              <i class="fa fa-check rights" aria-hidden="true"></i>
+            </div>
+            <div class="modal-header mod-header"></div>
+            <div class="modal-body mod-conetnt">
+              <div class="model-message row">
+                <span> {{ MODEL_MESSAGE }} </span>
+              </div>
+              <div *ngIf="MODEL_MESSAGE == 'Payment successfully  completed'">
+                <div class="confirm-price row ">
+                {{ TOTAL_PAYMENT | currency:'EUR'}} 
+                </div>
+                <div class="confirm-question row">
+                How would you like your recipt?
+                </div>
+                <div class="recipt-type row">
+                Print
+                </div>
+                <div class="recipt-type row">
+                Email
+                </div>
+                <div class="recipt-type row">
+                Both
+                </div>
+                <div class="recipt-type-none row">
+                None
+                </div>
+              </div>
+              <div class="confirm-div">
+                <button class="btn btn-success confirm" (click)="_closeModel()">Confirm</button>
+              </div>
+              
+              
+            </div>
+            <div class="modal-footer mod-footer">
+                
+            </div>
+        </div>
+    </div>
+  </div>
+
+<!-- <div class="container mt-5">
+    <h2>Stripe Checkout</h2>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <button (click)="pay(20)" class="btn btn-primary btn-block">Pay $20</button>
+      </div>
+      <div class="col-md-4">
+        <button (click)="pay(30)" class="btn btn-success btn-block">Pay $30</button>
+      </div>
+      <div class="col-md-4">
+        <button (click)="pay(50)" class="btn btn-info btn-block">Pay $50</button>
+      </div>    
+    </div>
+    <p class="mt-5">
+        Try it out using the test card number <b>4242 4242 4242 4242</b>, a random three-digit CVC number, any expiration date in the future, and a random five-digit U.S. ZIP code.
+    </p>
+  </div> -->

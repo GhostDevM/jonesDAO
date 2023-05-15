@@ -1,0 +1,455 @@
+
+.custom {
+
+    border-radius: 15px !important;
+    background-color: unset !important;
+    border-radius: unset !important;
+}
+
+.staff-list {
+    margin-left: 0px;
+    padding-top: 0px !important;
+}
+
+
+.table-div {
+    padding-top: 30px !important;
+    position: relative;
+    background-color: hsla(0,0%,100%,.96);
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-top: -15px;
+}
+
+.table-div-content {
+    overflow: overlay;
+    margin-left: -10px;
+    margin-right: -10px;
+   
+}
+
+.table>thead>tr>th {
+    background-color: #361b5e;
+    color: white;
+    text-align: center;
+}
+
+.image-class {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 25px;
+    margin-left: 25px;
+}
+
+.rota-plus {
+    font-size: 20px !important;
+}
+
+.badge {
+    border-radius: 20px;
+    background-color: #e5e6e8;
+    color: black;
+    display: flex;
+    align-items: center;
+    min-width: 114px;
+    justify-content: center;
+    padding: 0 0px 0 10px !important;
+    margin-top: 3px;
+    min-height: 32px;
+}
+.badge-active {
+    color: #fff;
+    background-color: #361b5e!important;
+    
+}
+
+
+.leave-day-active {
+    color: #fff;
+    /* background-color: #f9ae5b !important; */
+}
+
+.staff-day {
+    min-width: 110px !important;
+}
+
+.delete-shift {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.repeatable-working {
+    margin-top: -10px;
+}
+
+.repeat-working {
+    margin-top: -25px;
+}
+
+.still-working {
+    margin-top: 5px;
+    margin-bottom: -20px;
+}
+
+.hr-custom {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* .add-shift {
+    color: blue;
+    margin-top: 5px;
+} */
+
+.btn-save {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 10px;
+    border: none;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.btn-save:hover {
+    background-color: blueviolet;
+    color: white !important;
+    font-weight: 400;
+}
+
+.cancel {
+    margin-top: 20px;
+}
+.modal {
+    /* overflow-y: scroll;   */
+}
+
+/* .navbar>div {
+    position: unset !important; 
+} */
+
+.shift-for-footer {
+    padding-bottom: 10px;
+    border-top: none;
+    margin-right: 20px;
+}
+
+.model-button {
+    width: 80px;
+    background-color: #3c2c60;
+    color: white;
+    padding: 5px 5px;
+}
+
+.e-input-group-icon {
+    color: #0367a3;
+}
+
+.staff-member-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px;
+}
+
+.sick-training-day {
+    display: flex;
+    padding-left: 0px;
+    justify-content: space-between;
+    margin-left: -5px;
+    padding-right: 0px;
+
+}
+
+
+
+
+.repeat-working-hours {
+    display: flex;
+}
+
+.week-icon-left {
+    font-size: 25px;
+    color: #0367a3;
+    padding-top: 5px;
+    margin-right: 5px;
+}
+.week-icon-right {
+    font-size: 25px;
+    color: #0367a3;
+    padding-top: 5px;
+    margin-left: 5px;
+}
+.week-icon:hover {
+    cursor: pointer;
+}
+
+.date-picker {
+    display: flex;
+    width: 250px;
+    float: right;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    /* border: 1px solid; */
+    height: 49px;
+    border-radius: 25px;
+    background: white;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-right: 15px;
+}
+.image-name {
+    /* display: flex; */
+    text-align: center;
+    width: max-content;
+}
+
+.rota-staff-name {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.main-div {
+    margin-left: -5px;
+    /* overflow: auto; */
+    border-radius: 20px;
+}
+
+.editable {
+    margin-top: 10px;
+}
+
+.input-div {
+    display: inline-flex;
+}
+
+.editable-end-time {
+
+    margin-left: 5px;
+}
+
+.editable-buttons {
+    display: inline-flex;
+}
+
+.edit-timing-icon {
+    padding: 0 6px;
+    min-height: 24px;
+    width: 31%;
+    padding-top: 6px;
+}
+
+.table {
+    width: 100%;
+    margin-left: -10px;
+}
+
+.editable-input {
+
+    border-color: #453666 !important;
+    min-width: 110px !important;
+}
+
+.weekly_hours {
+    /* display: inherit; */
+    font-weight: bold;
+}
+
+.navbar .alert {
+    border-radius: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    z-index: 3;
+    top: 0 !important;
+}
+
+
+/* Message model CSS  start*/
+
+.modal-dialog-message{
+    width: 30% !important;
+  }
+  .message-model {
+    /* /position: relative; */
+    /* top: 20% !important; */
+  }
+  
+  .right-icon {
+  
+    position: absolute;
+    border: 1px solid black;
+    height: 50px;
+    width: 50px;
+    margin-left: 43%;
+    top: -26px;
+    font-size: 22px;
+    padding: 2.5%;
+    border-radius: 50%;
+    background-color: #6cd038;
+  }
+  
+  .rights {
+    margin-left: 0.5rem;
+    color: white;
+  }
+  
+  .mod-header {
+  
+    border-bottom: none !important;
+  }
+  .mod-footer {
+  
+    border-bottom: none !important;
+  }
+  
+  .confirm-div {
+    margin-top: 40px !important;
+  }
+  
+  .confirm {
+    padding-right: 35px;
+    padding-left: 35px;
+    background-color: #20b61a;
+    color: white;
+  }
+  
+  .mod-conetnt{
+  
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 10px !important;
+  }
+  
+  /* Message model CSS end */
+  
+  .dayclick{
+      display: flex;
+      margin-top: -20px;
+  }
+  .clicker {
+    margin-left: auto;
+    padding-top: 18px;
+}
+.clicker button {
+    margin: 0 12px;
+    padding: 3px 15px;
+    /* border: 2px solid #7a5a23; */
+    border-radius: 9px;
+    color: black;
+}
+
+button.absentday {
+    color: black;
+    /* background: #453666; */
+    border: none;
+    background-color: white;
+    font-size: 15px;
+}
+button.absentday:hover {
+    background-color: #E96D2F;
+    color: white;
+    opacity: 0.8;
+    color: #d3cedf
+    #e1c8bd
+}
+
+.label {
+    margin-bottom: 0px;
+}
+
+button.workday {
+    color: black;
+    /* background: #453666; */
+    border: none;
+    background-color: white;
+    font-size: 15px;
+}
+button.workday:hover {
+    background-color: #361b5e;
+    color: white;
+    opacity: 0.8;
+    color: #d3cedf
+    #e1c8bd
+}
+
+button.traday {
+    background: #004965;
+}
+button.sticday {
+    background: #e96d36;
+}
+button.annuday {
+    background: #e7bc4b;
+}
+
+.save_not_disabled {
+
+    background: hsl(128deg 68% 31%) !important;
+    cursor: pointer;
+}
+
+.save_disabled {
+
+    background: hsl(128deg 21% 65%) !important;
+    cursor: pointer;
+}
+
+.cancel_not_disabled {
+
+    background: #ff0000 !important;
+    cursor: pointer;
+}
+
+.cancel_disabled {
+
+    background: #c98080 !important;
+    cursor: pointer;
+}   
+
+.clicker i {
+    margin: 0 9px;
+    border-radius: 50%;
+    padding: 11px 25px 11px 13px;
+    color: #fff;
+}
+
+.modal-header {
+    min-height: 16.43px;
+    padding: 10px 15px 5px 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.modal-body {
+    position: relative;
+    padding: 5px;
+}
+
+.working-info {
+    height: 25px;
+    padding: 0px;
+}
+
+.sick-training {
+    height: 30px;
+    padding: 5px;
+}
+
+.staff-member {
+    margin-bottom: -30px;
+}
+
+.clicker i.fa.fa-floppy-o {
+    background-color: hsl(128deg 68% 31%);
+}
+.clicker i.fa.fa-times {
+    background: #ff0000;
+}
+@media (min-width: 768px){
+    .modal-dialog {
+        width: 40% !important;
+        margin: 30px auto;
+        top: 0%;
+    }
+}

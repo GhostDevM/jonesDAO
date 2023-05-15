@@ -1,0 +1,304 @@
+<div class="staff-heading row">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main-heading">
+        <!-- <div class="heading" [routerLink]="['/staff']">Staff List</div>
+        <div class="heading">Staff Access</div>
+        <div class="heading">Staff Commission</div>
+        <div class="heading" [routerLink]="['/staff/rota']">Rota</div>
+        <div class="heading">Staff performence</div> -->
+        
+
+        <div class="row heading-bar">
+            <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 heading-list" *ngFor="let routing of ROUTE_URLS" [class.active]="routing.url ==
+                    CURRENT_ROUTE_LINK" [routerLink]="routing.is_working ? [routing.url] : [CURRENT_ROUTE_LINK]"> 
+                    {{ routing.value }} 
+                </div>
+                <div>
+                    <button *ngIf="CURRENT_ROUTE_LINK == '/staff'" class="add-staff-button btn btn-info" (click)="_openNewStaffPopup()">+ Add New Staff</button>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
+
+<div class="modal" tabindex="-1"  role="dialog" [ngStyle]="{'display': NEW_STAFF_MODEL_OPEN ? 'block' : 'none' }">
+    <div class="modal-dialog modal-dialog-scrollable new-category-pop" role="document">
+        <div class="add-staff-modal modal-content">
+            <div class="add-staff-modal-body modal-body ">
+                <nav #navbar class="navbar navbar-default ">
+                    <div class="container-fluid">
+            
+                        <form [formGroup]="addStaffForm" (ngSubmit)="_addStaff(addStaffForm)">
+                            <div class="staff-list-add-title row ">
+                                Add Staff
+                            </div>
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>First Name</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="firstName" autocomplete="off" placeholder="enter the first name">
+                                  
+                                  <div *ngFor="let error of errorMesages.firstName">
+                                      <div *ngIf="firstName.hasError(error.type) && (firstName.dirty || firstName.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+            
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Last Name</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="lastName"  placeholder="enter the last name">
+                                  
+                                  <div *ngFor="let error of errorMesages.lastName">
+                                      <div *ngIf="lastName.hasError(error.type) && (lastName.dirty || lastName.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+                            
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Phone</label>
+                                  <input type="text" class="add-staff-input form-control" (keypress)="numberOnlyValidation($event)" formControlName="number"  placeholder="enter the phone number">
+                                  
+                                  <div *ngFor="let error of errorMesages.number">
+                                      <div *ngIf="number.hasError(error.type) && (number.dirty || number.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>D.O.B</label>
+                                  <input type="date" class="add-staff-input form-control" formControlName="dateOfBirth"  placeholder="enter the date of birth">
+                                  
+                                  <div *ngFor="let error of errorMesages.dateOfBirth">
+                                      <div *ngIf="dateOfBirth.hasError(error.type) && (dateOfBirth.dirty || dateOfBirth.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+            
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div> 
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Gender</label>
+                                  
+                                  <select class="add-staff-input form-control" formControlName="gender" >
+                                    <option *ngFor="let gender of this.commonService.GENDER_LIST" [value]="gender.value"> {{ gender.value }}</option>
+                                  </select>
+                                  <div *ngFor="let error of errorMesages.gender">
+                                      <div *ngIf="gender.hasError(error.type) && (gender.dirty || gender.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Address</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="address"  placeholder="enter the address">
+                                  
+                                  <div *ngFor="let error of errorMesages.address">
+                                      <div *ngIf="address.hasError(error.type) && (address.dirty || address.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+            
+                            </div>
+                            
+            
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Emergency Contact Name</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="emergencyContactName"  placeholder="enter the emergency contact name">
+                                  
+                                  <div *ngFor="let error of errorMesages.emergencyContactName">
+                                      <div *ngIf="emergencyContactName.hasError(error.type) && (emergencyContactName.dirty || emergencyContactName.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Emergency Contact No</label>
+                                  <input type="number" class="add-staff-input form-control" (keypress)="numberOnlyValidation($event)" formControlName="emergencyContactNumber"  placeholder="enter the emergency contact number">
+                                  
+                                  <div *ngFor="let error of errorMesages.emergencyContactNumber">
+                                      <div *ngIf="emergencyContactNumber.hasError(error.type) && (emergencyContactNumber.dirty || emergencyContactNumber.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+        
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Role</label>
+                                  
+                                  <select class="add-staff-input form-control"  formControlName="role">
+                                    <option value="0">No Role</option>
+                                    <option *ngFor="let role of ROLE_TYPES" [value]="role.role_id"> {{ role.roleName }} </option>
+                                  </select>
+                                  
+                                  <div *ngFor="let error of errorMesages.role">
+                                      <div *ngIf="role.hasError(error.type) && (role.dirty || role.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Email</label>
+                                  <input type="email" class="add-staff-input form-control" formControlName="email"  placeholder="enter the staff email">
+                                  
+                                  <div *ngFor="let error of errorMesages.email">
+                                      <div *ngIf="email.hasError(error.type) && (email.dirty || email.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+                            
+            
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Password</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="password"  placeholder="enter the password">
+                                  
+                                  <div *ngFor="let error of errorMesages.password">
+                                      <div *ngIf="password.hasError(error.type) && (password.dirty || password.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+            
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Employee Bio</label>
+                                  <input type="text" class="add-staff-input form-control" formControlName="employeeBio"  placeholder="enter the emplpoyee bio">
+                                  
+                                  <div *ngFor="let error of errorMesages.employeeBio">
+                                      <div *ngIf="employeeBio.hasError(error.type) && (employeeBio.dirty || employeeBio.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            </div>
+                            
+            
+                            <div class="row my-row">
+                              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                              <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                  <label>Image</label>
+                                  <input type="file" class="add-staff-input form-control" formControlName="employeeImg" (change)="_selectFile($event)" >
+                                  
+                                  <div *ngFor="let error of errorMesages.employeeImg">
+                                      <div *ngIf="employeeImg.hasError(error.type) && (employeeImg.dirty || employeeImg.touched)">
+                                        <div class="alert alert-danger">
+                                          {{ error.message}}.
+                                        </div>
+                                      </div>
+                                      <br>
+                                  </div>
+            
+            
+                                  <!-- <div class="alert alert-success" *ngIf="SUCCESS_MESSAGE">
+                                    New Staff Added Successfully
+                                  </div> -->
+                  
+                                  <div class="alert alert-danger" *ngIf="ERROR_MESSAGE">
+                                    Staff not added. Server error occuered Please try again later
+                                  </div>
+                                  
+                              </div>
+            
+                              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                  
+                              </div>
+                            </div>
+                            
+                            <div class="row">
+                              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-center">
+                                <div class="row button-group">
+                                    
+                                    <input type="submit" [disabled]="!addStaffForm.valid"  class="submit-button"  value="Submit">
+                                    <div class="submit-button" (click)="_closeStaffModel()">Cancel</div>
+                                </div>
+                                
+                               
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="modal message-model" tabindex="-1"  role="dialog" [ngStyle]="{'display': MODEL_OPEN ? 'block' : 'none' }">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+  
+            
+            <div class="modal-header mod-header"></div>
+            <div class="modal-body mod-conetnt">
+              
+              <span class="add-message"> New Staff Added Successfully! </span>
+              <div class="confirm-div">
+                <button class="btn btn-success confirm" (click)="_closeModel()">Confirm</button>
+              </div>
+              
+            </div>
+            <div class="modal-footer mod-footer">
+                
+            </div>
+        </div>
+    </div>
+</div>
